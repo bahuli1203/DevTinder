@@ -4,3 +4,4 @@ flask-login
 google-generativeai
 requests
 werkzeug
+scikit-learn
