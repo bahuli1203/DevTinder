@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}My Team - Dev Tinder{% endblock %}
+
+{% block page_title %}Team Workspace{% endblock %}
+
+{% block content %}
+<div class="row g-4" data-aos="fade-up">
+    {% if team %}
+    <!-- ACTIVE TEAM DASHBOARD -->
+    <div class="col-lg-7">
+        <!-- Team Details Panel -->
+        <div class="glass-panel p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-3 mb-4" >
+                <div>
+                    <h3 class="text-white fw-bold mb-1">{{ team.name }}</h3>
+                    <p class="text-muted small mb-0">{{ team.description }}</p>
+                </div>
+                <span class="badge bg-secondary p-2 fs-6">Strength: {{ health_metrics.overall }}/100</span>
+            </div>
+            
+            <h5 class="text-white fw-bold mb-3"><i class="fa-solid fa-users text-primary me-2"></i>Active Members</h5>
+            <div class="d-flex flex-column gap-3 mb-4">
+                {% for member in team.members %}
+                {% if member.status == 'active' %}
+                <div class="p-3 rounded bg-white bg-opacity-5 border border-secondary d-flex justify-content-between align-items-center" >
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{{ member.user.profile_image or 'https://api.dicebear.com/7.x/bottts/svg?seed=' + member.user.username }}" class="rounded-circle" style="width: 45px; height: 45px;">
+                        <div>
+                            <div class="fw-bold text-white mb-0">{{ member.user.full_name or member.user.username }}</div>
+                            <div class="text-muted small">{{ member.user.college }} • <span class="text-accent">{{ member.role }}</span></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        {% if team.creator_id == current_user.id and member.user_id != current_user.id %}
+                        <form action="{{ url_for('remove_member', member_id=member.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this member?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-user-minus"></i></button>
+                        </form>
+                        {% elif member.user_id == team.creator_id %}
+                        <span class="badge bg-secondary">Creator</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Invite Teammates Section -->
+            <h5 class="text-white fw-bold mb-3"><i class="fa-solid fa-user-plus text-secondary me-2"></i>Invite Teammates</h5>
+            <form action="{{ url_for('invite_member') }}" method="POST" class="row g-2">
+                <div class="col-md-7">
+                    <select name="user_id" class="form-select form-control-glass" required>
+                        <option value="" disabled selected>Search developer profiles...</option>
+                        {% for usr in potential_invites %}
+                        <option value="{{ usr.id }}">{{ usr.full_name or usr.username }} (@{{ usr.username }}) — {{ usr.skills }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="role" class="form-select form-control-glass" required>
+                        <option value="Frontend Developer">Frontend</option>
+                        <option value="Backend Developer">Backend</option>
+                        <option value="UI UX Designer">UI UX Design</option>
+                        <option value="AI Integration Lead">AI / ML</option>
+                        <option value="Cybersecurity Lead">Cybersec</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-glow-primary w-100 py-2">Invite</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- TEAM HEALTH ANALYTICS SIDEBAR -->
+    <div class="col-lg-5">
+        <!-- Chart JS Radar Competency -->
+        <div class="glass-panel p-4 mb-4">
+            <h5 class="text-white fw-bold mb-3"><i class="fa-solid fa-chart-line text-accent me-2"></i>Competency Radar</h5>
+            <div style="max-height: 250px;" class="d-flex justify-content-center">
+                <canvas id="teamRadarChart" data-metrics='{{ health_metrics|tojson }}'></canvas>
+            </div>
+        </div>
+        
+        <!-- AI Team Health Analyzer suggestions -->
+        <div class="glass-panel p-4">
+            <h5 class="text-white fw-bold mb-3"><i class="fa-solid fa-robot text-secondary me-2"></i>AI Team Health Recommendations</h5>
+            <ul class="list-unstyled mb-0">
+                {% for sug in health_suggestions %}
+                <li class="p-2 border-bottom border-secondary d-flex gap-2" >
+                    <i class="fa-solid fa-circle-exclamation text-warning mt-1"></i>
+                    <span class="small text-white-50">{{ sug }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    {% else %}
+    <!-- NO TEAM VIEW (CREATION WORKSPACE) -->
+    <div class="col-md-6" data-aos="fade-right">
+        <div class="glass-panel p-5 h-100">
+            <h4 class="text-white fw-bold mb-3"><i class="fa-solid fa-users-rectangle text-secondary me-2"></i>Create a New Team</h4>
+            <p class="text-muted small mb-4">Assemble your coworkers or find developers around the world to build hackathon projects together.</p>
+            
+            <form action="{{ url_for('create_team') }}" method="POST">
+                <div class="mb-3">
+                    <label class="text-white-50 small mb-2">Team Name *</label>
+                    <input type="text" name="team_name" class="form-control form-control-glass" placeholder="e.g. Code Ninjas" required>
+                </div>
+                <div class="mb-4">
+                    <label class="text-white-50 small mb-2">Team Description</label>
+                    <textarea name="team_description" class="form-control form-control-glass" rows="4" placeholder="Briefly describe what your team is building or hoping to focus on (e.g. web tools, generative design)..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-glow-primary w-100 py-3">Create Team</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- One Click Team Matcher Panel -->
+    <div class="col-md-6" data-aos="fade-left">
+        <div class="glass-panel p-5 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h4 class="text-white fw-bold mb-3"><i class="fa-solid fa-wand-magic-sparkles text-primary me-2"></i>One-Click Team Generator</h4>
+                <p class="text-muted small mb-4">Too busy to swipe and match? Let our automated balance engine form a team for you instantly!</p>
+                
+                <div class="p-3 rounded bg-white bg-opacity-5 border border-secondary mb-4" >
+                    <h6 class="text-white fw-bold mb-2"><i class="fa-solid fa-robot text-accent me-2"></i>How it works:</h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li class="mb-1"><i class="fa-solid fa-check text-primary me-2"></i>Checks your skills list</li>
+                        <li class="mb-1"><i class="fa-solid fa-check text-primary me-2"></i>Queries available unteamed hackers</li>
+                        <li class="mb-1"><i class="fa-solid fa-check text-primary me-2"></i>Auto-assembles a balanced cross-discipline team</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <form action="{{ url_for('one_click_team_generator') }}" method="POST">
+                <button type="submit" class="btn btn-glow-accent w-100 py-3">
+                    <i class="fa-solid fa-bolt me-2"></i>Assemble My Team
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- INCOMING TEAM INVITATIONS PANEL -->
+    {% if invites %}
+    <div class="col-12 mt-4" data-aos="fade-up">
+        <div class="glass-panel p-4">
+            <h5 class="text-white fw-bold mb-3"><i class="fa-regular fa-envelope text-accent me-2"></i>Pending Invitations</h5>
+            <div class="row g-3">
+                {% for invite in invites %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="p-3 rounded bg-white bg-opacity-5 border border-secondary" >
+                        <div class="fw-bold text-white small mb-1">{{ invite.team.name }}</div>
+                        <div class="text-muted small mb-3">Role Offered: <span class="text-accent">{{ invite.role }}</span></div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('respond_invite', invite_id=invite.id, action='accept') }}" class="btn btn-glow-primary btn-sm px-3 flex-grow-1">Accept</a>
+                            <a href="{{ url_for('respond_invite', invite_id=invite.id, action='decline') }}" class="btn btn-outline-danger btn-sm px-3">Decline</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

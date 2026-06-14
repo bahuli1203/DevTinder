@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block title %}Dev Tinder - Find Your Perfect Hackathon Team{% endblock %}
+
+{% block guest_content %}
+<!-- Hero Section -->
+<section class="landing-hero position-relative overflow-hidden py-5">
+    <div class="hero-glow"></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+                <span class="badge bg-secondary mb-3 px-3 py-2 text-uppercase fw-semibold" style="letter-spacing: 1px;">AI Matchmaking for Hackathons</span>
+                <h1 class="fw-bold display-4 lh-sm mb-4" style="color: var(--text-primary);">
+                    Find Your Perfect <br>
+                    <span class="animated-gradient-text">Hackathon Team</span>
+                </h1>
+                <p class="fs-5 mb-4" style="color: var(--text-secondary);">
+                    Dev Tinder is the ultimate matchmaking platform designed for hackers. Find complementary partners, evaluate team health indices, auto-create projects with Google Gemini, and code your way to victory.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('register') }}" class="btn btn-glow-primary btn-lg px-4 py-3">
+                        <i class="fa-solid fa-bolt me-2"></i>Find Teammates
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg px-4 py-3" style="border-color: var(--card-border); color: var(--text-primary); background: var(--card-bg);">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>Sign In
+                    </a>
+                </div>
+                
+                <!-- Stats Row -->
+                <div class="row mt-5 pt-4 border-top" style="border-color: var(--card-border) !important;">
+                    <div class="col-4">
+                        <h3 class="fw-extrabold mb-0" style="color: var(--text-primary);"><span class="counter" data-target="12000" data-suffix="+">0</span></h3>
+                        <p class="small text-muted mb-0">Hackers Registered</p>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="fw-extrabold mb-0" style="color: var(--text-primary);"><span class="counter" data-target="3400">0</span></h3>
+                        <p class="small text-muted mb-0">Teams Formed</p>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="fw-extrabold mb-0" style="color: var(--text-primary);">$<span class="counter" data-target="1.2" data-decimals="1" data-suffix="M">0</span></h3>
+                        <p class="small text-muted mb-0">Prizes Won</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left">
+                <!-- Floating Dashboard Mockup Illustration -->
+                <div class="glass-panel p-4 position-relative animate-float shadow-lg">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex gap-2">
+                            <span class="rounded-circle bg-danger" style="width: 12px; height: 12px; display: inline-block;"></span>
+                            <span class="rounded-circle bg-warning" style="width: 12px; height: 12px; display: inline-block;"></span>
+                            <span class="rounded-circle bg-success" style="width: 12px; height: 12px; display: inline-block;"></span>
+                        </div>
+                        <span class="badge bg-primary">Team Health: 94%</span>
+                    </div>
+                    
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-heart-pulse text-secondary display-3 mb-3"></i>
+                        <h4 class="fw-bold mb-1" style="color: var(--text-primary);">Priya & Kabir</h4>
+                        <p class="text-accent small mb-3">Backend & AI Specialist + UI Designer matched!</p>
+                    </div>
+                    
+                    <!-- Code block aesthetic -->
+                    <div class="p-3 rounded text-start font-monospace" style="font-size: 0.8rem; background: var(--bg-main); border: 1px solid var(--card-border); color: var(--success); min-height: 92px;">
+                        <div id="terminal-output" style="white-space: pre-wrap;"></div><span class="terminal-cursor">_</span>
+                    </div>
+
+                    <!-- Live Activity Feed -->
+                    <div class="mt-3 pt-3 border-top" style="border-color: var(--card-border) !important;">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="live-dot"></span>
+                            <span class="small fw-semibold text-uppercase" style="color: var(--text-muted); letter-spacing: 1px; font-size: 0.7rem;">Live Activity</span>
+                        </div>
+                        <div id="activity-feed" class="d-flex flex-column gap-2"></div>
+                    </div>
+
+                    <!-- 3D Animated Mascot: matched coding duo + rubber duck -->
+                    <div class="mascot-wrapper">
+                        <img src="{{ url_for('static', filename='img/mascot.svg') }}" alt="" class="mascot-svg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5" >
+    <div class="container py-4">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold display-5" style="color: var(--text-primary);">Next-Gen Matchmaking Features</h2>
+            <p class="text-muted mx-auto" style="max-width: 600px;">
+                Everything you need to discover, assemble, prototype, and pitch a hackathon-winning application.
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-panel p-4 h-100 glass-panel-hover">
+                    <div class="mb-3"><i class="fa-solid fa-heart-pulse text-secondary fs-2"></i></div>
+                    <h5 class="fw-bold" style="color: var(--text-primary);">AI Matchmaking</h5>
+                    <p class="text-muted small">Swipe through developer cards. Swipe right to connect, left to pass. Our dynamic compatibility engine pairs skills, experience, and availability.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="glass-panel p-4 h-100 glass-panel-hover">
+                    <div class="mb-3"><i class="fa-solid fa-chart-line text-primary fs-2"></i></div>
+                    <h5 class="fw-bold" style="color: var(--text-primary);">Team Strength Indices</h5>
+                    <p class="text-muted small">Assess your team balance in real-time. View radar competencies in Frontend, Backend, UI/UX, AI, and Cybersecurity with suggestions on missing roles.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="glass-panel p-4 h-100 glass-panel-hover">
+                    <div class="mb-3"><i class="fa-solid fa-wand-magic-sparkles text-accent fs-2"></i></div>
+                    <h5 class="fw-bold" style="color: var(--text-primary);">AI Project Lab</h5>
+                    <p class="text-muted small">Enter theme and skills. Our Google Gemini API client recommends project ideas, monetizations, elevator pitches, roadmaps, and pitch demo scripts.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="glass-panel p-4 h-100 glass-panel-hover">
+                    <div class="mb-3"><i class="fa-solid fa-comments text-success fs-2"></i></div>
+                    <h5 class="fw-bold" style="color: var(--text-primary);">Real-Time Chat</h5>
+                    <p class="text-muted small">Collaborate immediately with your matches or within your team channel. Interactive emojis and online indicators build quick synergy.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+                <div class="glass-panel p-4 h-100 glass-panel-hover">
+                    <div class="mb-3"><i class="fa-brands fa-github text-info fs-2"></i></div>
+                    <h5 class="fw-bold" style="color: var(--text-primary);">GitHub profile analyzer</h5>
+                    <p class="text-muted small">Inspect public repos, languages, stars, and contribution metrics directly in-app to verify skills and credibility before swiping.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
+                <div class="glass-panel p-4 h-100 glass-panel-hover">
+                    <div class="mb-3"><i class="fa-solid fa-trophy text-warning fs-2"></i></div>
+                    <h5 class="fw-bold" style="color: var(--text-primary);">Ranked Leaderboard</h5>
+                    <p class="text-muted small">Gain activity ratings on every code upload, swipe, and pitch generation. Earn coveted badges like 'AI Wizard' or 'Design Pro'.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5" >
+    <div class="container py-4">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold display-5" style="color: var(--text-primary);">How It Works</h2>
+            <p class="text-muted mx-auto" style="max-width: 600px;">
+                Five simple steps to assemble a high-functioning developer team and win your next competition.
+            </p>
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-lg-4 mb-4 mb-lg-0" data-aos="fade-right">
+                <div class="glass-panel p-4 text-center">
+                    <i class="fa-solid fa-circle-play text-primary mb-3" style="font-size: 2rem;"></i>
+                    <h4 class="fw-bold" style="color: var(--text-primary);">Launch Your Journey</h4>
+                    <p class="text-muted small mb-0">Create your account, hook up your GitHub repository profile, and select availability options in less than 60 seconds.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-8" data-aos="fade-left">
+                <div class="d-flex flex-column gap-3">
+                    <div class="d-flex gap-3 align-items-start glass-panel p-3">
+                        <span class="badge bg-secondary p-3 fs-5">1</span>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color: var(--text-primary);">Create Profile</h6>
+                            <p class="text-muted small mb-0">Describe yourself, enter your current university, major, graduation date, and background bio.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 align-items-start glass-panel p-3">
+                        <span class="badge bg-secondary p-3 fs-5">2</span>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color: var(--text-primary);">Add Skills</h6>
+                            <p class="text-muted small mb-0">Check the boxes of your stack: React, Python, Flask, AI, Machine Learning, UI/UX design, or Cybersecurity.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 align-items-start glass-panel p-3">
+                        <span class="badge bg-secondary p-3 fs-5">3</span>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color: var(--text-primary);">AI Finds Matches</h6>
+                            <p class="text-muted small mb-0">Our multi-parameter logic matches availability schedules, skill domains, and complementary profiles.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 align-items-start glass-panel p-3">
+                        <span class="badge bg-secondary p-3 fs-5">4</span>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color: var(--text-primary);">Build Team & Generate Project Ideas</h6>
+                            <p class="text-muted small mb-0">Form your workspace. Invite members, look at competency radar graphs, and run AI project generator queries.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 align-items-start glass-panel p-3">
+                        <span class="badge bg-secondary p-3 fs-5">5</span>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color: var(--text-primary);">Win Hackathons</h6>
+                            <p class="text-muted small mb-0">Develop your MVP, practice the AI demo script, and bring home the cash prize!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold display-5" style="color: var(--text-primary);">What Hackers Say</h2>
+            <p class="text-muted mx-auto" style="max-width: 600px;">
+                Read stories from developers who found their co-founders and team members on Dev Tinder.
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                <div class="glass-panel p-4 h-100 text-center">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
+                    <h5 class="fw-bold mb-0" style="color: var(--text-primary);">Jessica Chen</h5>
+                    <p class="text-accent small mb-3">AI Hackathon Champion</p>
+                    <p class="text-muted small">"I was searching for a designer for the Google AI Challenge. I logged in, swiped right on Sarah, and matched in 10 minutes. Her radar design score was exactly what we needed to win!"</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="glass-panel p-4 h-100 text-center">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
+                    <h5 class="fw-bold mb-0" style="color: var(--text-primary);">Marcus Aurelius</h5>
+                    <p class="text-accent small mb-3">Fullstack Hacker</p>
+                    <p class="text-muted small">"The One-Click Team builder is pure magic. It created a 3-member team with complementary backend, design, and frontend skills. The Gemini AI Pitch script was what we presented to the judges!"</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+                <div class="glass-panel p-4 h-100 text-center">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
+                    <h5 class="fw-bold mb-0" style="color: var(--text-primary);">Aarav Patel</h5>
+                    <p class="text-accent small mb-3">Cybersecurity Analyst</p>
+                    <p class="text-muted small">"Dev Tinder makes profile checks extremely secure. I connected my GitHub and immediately had recruiters and teammate matches viewing my Python libraries and contributions. 10/10."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-5 mt-5" style="background: var(--navbar-bg); border-top: 1px solid var(--card-border); backdrop-filter: blur(10px);">
+    <div class="container text-center text-muted">
+        <h4 class="fw-bold mb-3" style="color: var(--text-primary);"><i class="fa-solid fa-fire text-secondary me-2"></i>Dev Tinder</h4>
+        <p class="small mb-4">"Find Your Perfect Hackathon Team."</p>
+        <div class="d-flex justify-content-center gap-4 mb-4">
+            <a href="#" class="text-muted"><i class="fa-brands fa-github fs-5"></i></a>
+            <a href="#" class="text-muted"><i class="fa-brands fa-linkedin fs-5"></i></a>
+            <a href="#" class="text-muted"><i class="fa-brands fa-discord fs-5"></i></a>
+        </div>
+        <div class="small">© 2026 Dev Tinder. Built for hackers worldwide. All rights reserved.</div>
+    </div>
+</footer>
+{% endblock %}

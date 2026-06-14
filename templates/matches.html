@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Find Matches - Dev Tinder{% endblock %}
+
+{% block page_title %}Teammate Matchmaking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-3" data-aos="fade-up">
+    <div class="col-md-6 text-center">
+        <!-- Swipe Card Stack Container -->
+        <div class="swipe-container mb-4" id="swipe-container">
+            <!-- Cards loaded dynamically via javascript main.js -->
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading potential partners...</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Swipe Action Trigger Row -->
+        <div class="swipe-actions" id="swipe-actions">
+            <button class="swipe-action-btn pass" id="swipe-pass" title="Pass (Swipe Left)">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <button class="swipe-action-btn superlike" id="swipe-super" title="Super Like (Swipe Up)">
+                <i class="fa-solid fa-star"></i>
+            </button>
+            <button class="swipe-action-btn connect" id="swipe-connect" title="Connect (Swipe Right)">
+                <i class="fa-solid fa-heart"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

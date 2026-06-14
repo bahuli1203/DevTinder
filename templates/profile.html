@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Dev Tinder{% endblock %}
+
+{% block page_title %}Profile settings{% endblock %}
+
+{% block content %}
+<div class="row g-4" data-aos="fade-up">
+    <!-- Main Profile Editor -->
+    <div class="col-lg-8">
+        <div class="glass-panel p-4">
+            <h5 class="text-white fw-bold border-bottom border-secondary pb-3 mb-4" >
+                <i class="fa-solid fa-user-pen text-secondary me-2"></i>Personal Metadata
+            </h5>
+            
+            <form action="{{ url_for('profile') }}" method="POST">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">Full Name *</label>
+                        <input type="text" name="full_name" class="form-control form-control-glass" value="{{ current_user.full_name or '' }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">College / University</label>
+                        <input type="text" name="college" class="form-control form-control-glass" value="{{ current_user.college or '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">Degree / Major</label>
+                        <input type="text" name="degree" class="form-control form-control-glass" value="{{ current_user.degree or '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">Graduation Year</label>
+                        <input type="number" name="grad_year" class="form-control form-control-glass" value="{{ current_user.grad_year or 2027 }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">City</label>
+                        <input type="text" name="city" class="form-control form-control-glass" value="{{ current_user.city or '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">Country</label>
+                        <input type="text" name="country" class="form-control form-control-glass" value="{{ current_user.country or '' }}">
+                    </div>
+                </div>
+
+                <h5 class="text-white border-bottom border-secondary pb-3 mb-4" >
+                    <i class="fa-solid fa-cubes-stacked text-primary me-2"></i>Skills & Hackathon Settings
+                </h5>
+                
+                <div class="mb-4">
+                    <label class="text-white-50 small mb-2">Select Your Stack (Select all that apply)</label>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% set my_skills = current_user.get_skills_list() %}
+                        {% set all_skills = ['HTML', 'CSS', 'JavaScript', 'React', 'Node', 'Python', 'Flask', 'Django', 'AI', 'Machine Learning', 'Cybersecurity', 'UI UX', 'Android', 'DevOps'] %}
+                        {% for skill in all_skills %}
+                        <input type="checkbox" name="skills_list" value="{{ skill }}" id="skill_{{ skill }}" class="checkbox-tag-input" {% if skill in my_skills %}checked{% endif %}>
+                        <label for="skill_{{ skill }}" class="checkbox-tag-label">{{ skill }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">Experience Level</label>
+                        <select name="experience_level" class="form-select form-control-glass">
+                            <option value="Beginner" {% if current_user.experience_level == 'Beginner' %}selected{% endif %}>Beginner (0-2 hackathons)</option>
+                            <option value="Intermediate" {% if current_user.experience_level == 'Intermediate' %}selected{% endif %}>Intermediate (3-5 hackathons)</option>
+                            <option value="Advanced" {% if current_user.experience_level == 'Advanced' %}selected{% endif %}>Advanced (6+ hackathons)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">Availability Schedule</label>
+                        <select name="availability" class="form-select form-control-glass">
+                            <option value="Weekdays" {% if current_user.availability == 'Weekdays' %}selected{% endif %}>Weekdays</option>
+                            <option value="Weekends" {% if current_user.availability == 'Weekends' %}selected{% endif %}>Weekends</option>
+                            <option value="Full Time" {% if current_user.availability == 'Full Time' %}selected{% endif %}>Full Time</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">Number of Hackathons Attended</label>
+                        <input type="number" name="hackathons_attended" class="form-control form-control-glass" value="{{ current_user.hackathons_attended or 0 }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-white-50 small mb-2">Number of Wins / Podiums</label>
+                        <input type="number" name="hackathons_won" class="form-control form-control-glass" value="{{ current_user.hackathons_won or 0 }}">
+                    </div>
+                </div>
+
+                <h5 class="text-white border-bottom border-secondary pb-3 mb-4" >
+                    <i class="fa-solid fa-paperclip text-accent me-2"></i>Developer Bio & Links
+                </h5>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="text-white-50 small mb-2">GitHub Profile URL</label>
+                        <input type="url" name="github_url" class="form-control form-control-glass" value="{{ current_user.github_url or '' }}" placeholder="https://github.com/username">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-white-50 small mb-2">LinkedIn Profile URL</label>
+                        <input type="url" name="linkedin_url" class="form-control form-control-glass" value="{{ current_user.linkedin_url or '' }}" placeholder="https://linkedin.com/in/username">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-white-50 small mb-2">Personal Portfolio URL</label>
+                        <input type="url" name="portfolio_url" class="form-control form-control-glass" value="{{ current_user.portfolio_url or '' }}" placeholder="https://portfolio.example.com">
+                    </div>
+                    <div class="col-12">
+                        <label class="text-white-50 small mb-2">Developer Bio</label>
+                        <textarea name="bio" class="form-control form-control-glass" rows="4">{{ current_user.bio or '' }}</textarea>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-glow-primary px-4 py-3"><i class="fa-solid fa-floppy-disk me-2"></i>Save Changes</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- GitHub Analyzer Widget -->
+    <div class="col-lg-4">
+        <div class="glass-panel p-4 mb-4">
+            <h5 class="text-white fw-bold mb-3"><i class="fa-brands fa-github text-accent me-2"></i>GitHub Profile Analyzer</h5>
+            <p class="text-muted small">Fetch public repositories, stars, and contributions to verify skills dynamically.</p>
+            
+            <form id="github-fetch-form" class="mb-4">
+                <div class="input-group">
+                    <input type="text" id="github-username-field" class="form-control form-control-glass py-2" placeholder="GitHub username" value="{% if current_user.github_url %}{{ current_user.github_url.split('/')[-1] }}{% endif %}">
+                    <button class="btn btn-glow-primary px-3" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+            
+            <div id="github-analyzer-result" class="p-3 rounded bg-white bg-opacity-5 border border-secondary" >
+                <div class="text-center text-muted py-3 small">
+                    <i class="fa-solid fa-circle-question fs-3 mb-2 d-block"></i>
+                    Enter a GitHub username above to fetch repositories.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile summary card -->
+        <div class="glass-panel p-4 text-center">
+            <img id="avatar-preview" src="{{ current_user.profile_image or 'https://api.dicebear.com/7.x/bottts/svg?seed=' + current_user.username }}" class="rounded-circle mb-3" style="width: 100px; height: 100px; border: 3px solid var(--primary);">
+            <h5 class="text-white fw-bold mb-1">{{ current_user.full_name or current_user.username }}</h5>
+            <span class="badge bg-secondary mb-3">{{ current_user.get_badge() }}</span>
+            <p class="text-muted small mb-3">{{ current_user.college or 'University Student' }}</p>
+
+            <!-- Avatar Picker -->
+            <form method="POST" id="avatar-form">
+                <h6 class="text-white fw-bold small text-uppercase mb-2" style="letter-spacing: 1px;">Choose Your Avatar</h6>
+                <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
+                    {% for style in ['bottts', 'pixel-art', 'adventurer', 'avataaars', 'bottts-neutral', 'fun-emoji'] %}
+                    <label class="avatar-option {% if current_user.profile_image and style in current_user.profile_image %}selected{% endif %}">
+                        <input type="radio" name="avatar_style" value="{{ style }}" class="d-none avatar-radio" {% if current_user.profile_image and style in current_user.profile_image %}checked{% endif %}>
+                        <img src="https://api.dicebear.com/7.x/{{ style }}/svg?seed={{ current_user.username }}" style="width: 48px; height: 48px;" class="rounded-circle">
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-outline-light btn-sm w-100 mt-1">Save Avatar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+<svg viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg" class="mascot-svg" role="img" aria-label="Two developers matched as a hackathon pair, debugging with their rubber duck">
+  <defs>
+    <linearGradient id="screenGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.15"/>
+    </linearGradient>
+    <style>
+      .mascot-laptop { animation: float-laptop 5s ease-in-out infinite; transform-origin: 140px 150px; }
+      .mascot-dev1 { animation: dev-nod 3.2s ease-in-out infinite; transform-origin: 95px 90px; }
+      .mascot-dev2 { animation: dev-nod 3.2s ease-in-out infinite reverse; transform-origin: 185px 90px; }
+      .mascot-duck { animation: duck-bob 2.4s ease-in-out infinite; transform-origin: 140px 200px; }
+      @keyframes float-laptop {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+      }
+      @keyframes dev-nod {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(3deg); }
+      }
+      @keyframes duck-bob {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-5px) rotate(-4deg); }
+      }
+    </style>
+  </defs>
+
+  <!-- Laptop -->
+  <g class="mascot-layer mascot-laptop">
+    <rect x="70" y="150" width="140" height="10" rx="3" fill="#1f2937"/>
+    <rect x="85" y="90" width="110" height="62" rx="4" fill="#111827" stroke="#14b8a6" stroke-width="2"/>
+    <rect x="92" y="97" width="96" height="48" rx="2" fill="url(#screenGlow)"/>
+    <text x="140" y="125" text-anchor="middle" font-family="monospace" font-size="11" fill="#14b8a6" font-weight="700">MATCH 95%</text>
+  </g>
+
+  <!-- Dev 1 (left) -->
+  <g class="mascot-layer mascot-dev1">
+    <circle cx="95" cy="60" r="22" fill="#fb7185"/>
+    <rect x="78" y="78" width="34" height="40" rx="10" fill="#0f172a"/>
+    <circle cx="87" cy="56" r="3" fill="#0f172a"/>
+    <circle cx="103" cy="56" r="3" fill="#0f172a"/>
+    <path d="M88 67 Q95 72 102 67" stroke="#0f172a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Dev 2 (right) -->
+  <g class="mascot-layer mascot-dev2">
+    <circle cx="185" cy="60" r="22" fill="#38bdf8"/>
+    <rect x="168" y="78" width="34" height="40" rx="10" fill="#0f172a"/>
+    <circle cx="177" cy="56" r="3" fill="#0f172a"/>
+    <circle cx="193" cy="56" r="3" fill="#0f172a"/>
+    <path d="M178 67 Q185 72 192 67" stroke="#0f172a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Rubber duck mascot -->
+  <g class="mascot-layer mascot-duck">
+    <ellipse cx="140" cy="200" rx="26" ry="20" fill="#facc15"/>
+    <circle cx="158" cy="188" r="13" fill="#facc15"/>
+    <circle cx="163" cy="184" r="2.2" fill="#0f172a"/>
+    <path d="M170 188 L180 186 L170 192 Z" fill="#fb923c"/>
+  </g>
+</svg>

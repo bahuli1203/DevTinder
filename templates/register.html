@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account - Dev Tinder{% endblock %}
+
+{% block guest_content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8" data-aos="zoom-in">
+            <div class="glass-panel p-5 shadow-lg">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold" style="color: var(--text-primary);">Create Your Hacker Account</h3>
+                    <p class="text-muted small">Join Dev Tinder to find your hackathon team and launch project MVPs.</p>
+                </div>
+                
+                <form action="{{ url_for('register') }}" method="POST">
+                    <h5 class="border-bottom pb-2 mb-3" style="color: var(--text-primary); border-color: var(--card-border) !important;">
+                        <i class="fa-solid fa-user-lock text-primary me-2"></i>Account & Education
+                    </h5>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="username" class="form-control" id="regUser" placeholder="e.g. hack_wizard" required>
+                                <label for="regUser">Username *</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" name="email" class="form-control" id="regEmail" placeholder="e.g. dev@example.com" required>
+                                <label for="regEmail">Email Address *</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="password" name="password" class="form-control" id="regPass" placeholder="••••••••" required>
+                                <label for="regPass">Password *</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="full_name" class="form-control" id="regName" placeholder="e.g. Priya Sharma" required>
+                                <label for="regName">Full Name *</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="college" class="form-control" id="regCollege" placeholder="e.g. IIT Delhi">
+                                <label for="regCollege">College / University</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating">
+                                <input type="text" name="degree" class="form-control" id="regDegree" placeholder="e.g. B.Tech CS">
+                                <label for="regDegree">Degree</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating">
+                                <input type="number" name="grad_year" class="form-control" id="regGrad" placeholder="2027" value="2027">
+                                <label for="regGrad">Graduation Year</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="city" class="form-control" id="regCity" placeholder="e.g. Delhi">
+                                <label for="regCity">City</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" name="country" class="form-control" id="regCountry" placeholder="e.g. India">
+                                <label for="regCountry">Country</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="border-bottom pb-2 mb-3" style="color: var(--text-primary); border-color: var(--card-border) !important;">
+                        <i class="fa-solid fa-code text-primary me-2"></i>Skills & Experience
+                    </h5>
+                    
+                    <div class="mb-4">
+                        <label class="text-muted small mb-2 fw-semibold">Select Your Stack (Select all that apply)</label>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% set all_skills = ['HTML', 'CSS', 'JavaScript', 'React', 'Node', 'Python', 'Flask', 'Django', 'AI', 'Machine Learning', 'Cybersecurity', 'UI UX', 'Android', 'DevOps'] %}
+                            {% for skill in all_skills %}
+                            <input type="checkbox" name="skills_list" value="{{ skill }}" id="skill_{{ skill }}" class="checkbox-tag-input">
+                            <label for="skill_{{ skill }}" class="checkbox-tag-label">{{ skill }}</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select name="experience_level" class="form-select form-control" id="regExp">
+                                    <option value="Beginner">Beginner (0-2 hackathons)</option>
+                                    <option value="Intermediate" selected>Intermediate (3-5 hackathons)</option>
+                                    <option value="Advanced">Advanced (6+ hackathons)</option>
+                                </select>
+                                <label for="regExp">Experience Level</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select name="availability" class="form-select form-control" id="regAvail">
+                                    <option value="Weekdays">Weekdays</option>
+                                    <option value="Weekends" selected>Weekends</option>
+                                    <option value="Full Time">Full Time</option>
+                                </select>
+                                <label for="regAvail">Weekly Availability</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" name="hackathons_attended" class="form-control" id="regHacks" value="0">
+                                <label for="regHacks">Number of Hackathons Attended</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" name="hackathons_won" class="form-control" id="regWins" value="0">
+                                <label for="regWins">Number of Wins / Podiums</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="border-bottom pb-2 mb-3" style="color: var(--text-primary); border-color: var(--card-border) !important;">
+                        <i class="fa-solid fa-link text-primary me-2"></i>Links & Bio
+                    </h5>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="url" name="github_url" class="form-control" id="regGit" placeholder="https://github.com/username">
+                                <label for="regGit">GitHub URL</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="url" name="linkedin_url" class="form-control" id="regLinked" placeholder="https://linkedin.com/in/username">
+                                <label for="regLinked">LinkedIn URL</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="url" name="portfolio_url" class="form-control" id="regPort" placeholder="https://portfolio.example.com">
+                                <label for="regPort">Portfolio URL</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea name="bio" class="form-control" id="regBio" style="height: 100px" placeholder="Tell potential teammates about your interests, past projects, or what you plan to build..."></textarea>
+                                <label for="regBio">Hacker Bio</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-glow-primary w-100 py-3 mb-3 fw-bold">Create Account</button>
+                    
+                    <div class="text-center text-muted small">
+                        Already have an account? <a href="{{ url_for('login') }}" class="text-accent text-decoration-none fw-semibold">Sign In</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

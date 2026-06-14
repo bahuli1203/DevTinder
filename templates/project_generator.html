@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}AI Project Lab - Dev Tinder{% endblock %}
+
+{% block page_title %}AI Project & Pitch Lab{% endblock %}
+
+{% block content %}
+<div class="row g-4" data-aos="fade-up">
+    <!-- Configuration Panel -->
+    <div class="col-lg-4">
+        <div class="glass-panel p-4 h-100">
+            <h5 class="text-white fw-bold mb-3"><i class="fa-solid fa-wand-magic-sparkles text-primary me-2"></i>Configure AI</h5>
+            <p class="text-muted small mb-4">Input a theme and let our Google Gemini client suggest custom hackathon project MVPs mapped to your skills.</p>
+            
+            <form action="{{ url_for('generate_project') }}" method="POST" class="mb-4">
+                <div class="mb-3">
+                    <label class="text-white-50 small mb-2">Hackathon Theme</label>
+                    <select name="theme" class="form-select form-control-glass">
+                        <option value="AI">Artificial Intelligence (LLMs, GenAI)</option>
+                        <option value="Web Development" selected>Web Development (Saas, Portals)</option>
+                        <option value="Cybersecurity">Cybersecurity (APIs, Firewalls)</option>
+                        <option value="Open Source">Open Source Contributions</option>
+                        <option value="Blockchain">Blockchain & Smart Contracts</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="text-white-50 small mb-2">Implementation Difficulty</label>
+                    <select name="difficulty" class="form-select form-control-glass">
+                        <option value="Beginner">Beginner (Fast Prototype)</option>
+                        <option value="Intermediate" selected>Intermediate (Standard Hackathon MVP)</option>
+                        <option value="Advanced">Advanced (High-End Production Mock)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-glow-primary w-100 py-3">
+                    <i class="fa-solid fa-gear fa-spin me-2"></i>Generate MVP Idea
+                </button>
+            </form>
+            
+            <!-- Saved Projects History -->
+            {% if saved_projects %}
+            <h6 class="text-white fw-bold border-top border-secondary pt-3 mb-3" >Idea Generation History</h6>
+            <div class="d-flex flex-column gap-2" style="max-height: 250px; overflow-y: auto;">
+                {% for proj in saved_projects %}
+                <div class="p-2 rounded bg-white bg-opacity-5 border border-secondary" >
+                    <div class="fw-bold text-white small text-truncate">{{ proj.title }}</div>
+                    <div class="d-flex justify-content-between text-muted small" style="font-size: 0.75rem;">
+                        <span>{{ proj.theme }}</span>
+                        <span class="text-accent">{{ proj.success_score }}% Success</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Generated Project Output -->
+    <div class="col-lg-8">
+        {% if saved_projects %}
+            {% set active_proj = saved_projects[0] %}
+            <div class="glass-panel p-4 mb-4">
+                <!-- Header Panel -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom border-secondary pb-3 mb-4" >
+                    <div>
+                        <span class="badge bg-secondary mb-1">{{ active_proj.theme }} • {{ active_proj.difficulty }}</span>
+                        <h3 class="text-white fw-bold mb-0">{{ active_proj.title }}</h3>
+                    </div>
+                    
+                    <div class="text-end">
+                        <div class="small text-muted mb-1">Team Success Score</div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h4 class="text-accent fw-bold mb-0">{{ active_proj.success_score }}%</h4>
+                            <div class="progress" style="width: 80px; height: 8px; background: rgba(255,255,255,0.1);">
+                                <div class="progress-bar bg-accent" style="width: {{ active_proj.success_score }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project details columns -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-white fw-bold mb-2"><i class="fa-solid fa-circle-question text-secondary me-2"></i>Problem Statement</h6>
+                        <p class="text-muted small mb-0">{{ active_proj.problem_statement }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-white fw-bold mb-2"><i class="fa-solid fa-users text-primary me-2"></i>Target Audience</h6>
+                        <p class="text-muted small mb-0">{{ active_proj.target_audience }}</p>
+                    </div>
+                </div>
+
+                {% if active_proj.inspired_by %}
+                <div class="row g-4 mb-4">
+                    <div class="col-12">
+                        <div class="p-3 rounded" style="background: var(--card-bg); border: 1px solid var(--card-border);">
+                            <h6 class="fw-bold mb-2" style="color: var(--text-primary);">
+                                <i class="fa-solid fa-database text-primary me-2"></i>RAG-Grounded — Inspired by Past Winners
+                            </h6>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                {% for name in active_proj.inspired_by.split(',') %}
+                                <span class="badge bg-secondary small">{{ name.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                            {% if active_proj.differentiation %}
+                            <p class="text-muted small mb-0"><i class="fa-solid fa-arrow-trend-up text-accent me-2"></i>{{ active_proj.differentiation }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-white fw-bold mb-2"><i class="fa-solid fa-list-check text-accent me-2"></i>Key MVP Features</h6>
+                        <ul class="text-muted small ps-3 mb-0">
+                            {% for feat in active_proj.features.split(',') %}
+                            <li class="mb-1">{{ feat.strip() }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-white fw-bold mb-2"><i class="fa-solid fa-code text-success me-2"></i>Recommended Tech Stack</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for tech in active_proj.tech_stack.split(',') %}
+                            <span class="badge bg-dark border border-secondary text-white-50">{{ tech.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-white fw-bold mb-2"><i class="fa-solid fa-route text-warning me-2"></i>MVP Roadmap</h6>
+                    <div class="p-3 rounded bg-dark bg-opacity-25 font-monospace text-muted small" style="border: 1px solid rgba(255,255,255,0.05);">
+                        {% for line in active_proj.mvp_roadmap.split('\n') %}
+                            <div class="mb-1 text-white-50">{{ line }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-white fw-bold mb-2"><i class="fa-solid fa-hand-holding-dollar text-primary me-2"></i>Sustainment & Monetization</h6>
+                    <p class="text-muted small mb-0">{{ active_proj.monetization }}</p>
+                </div>
+
+                <!-- AI Pitch Generator Panels -->
+                <h5 class="text-white fw-bold border-top border-secondary pt-4 pb-2 mb-3" >
+                    <i class="fa-solid fa-bullhorn text-secondary me-2"></i>AI Elevator Pitch & Demo Script
+                </h5>
+                
+                <div class="mb-3 p-3 rounded bg-white bg-opacity-5 border border-secondary" >
+                    <h6 class="text-white small fw-bold mb-1">Elevator Pitch Summary</h6>
+                    <p class="text-muted small mb-0 italic">"{{ active_proj.pitch_summary }}"</p>
+                </div>
+                
+                <div class="p-3 rounded bg-white bg-opacity-5 border border-secondary" >
+                    <h6 class="text-white small fw-bold mb-1">30-Second Demo Presentation Script</h6>
+                    <p class="text-muted small font-monospace mb-0">{{ active_proj.demo_script }}</p>
+                </div>
+            </div>
+        {% else %}
+            <!-- EMPTY WORKSPACE -->
+            <div class="glass-panel p-5 text-center d-flex flex-column align-items-center justify-content-center h-100">
+                <i class="fa-solid fa-wand-magic-sparkles text-primary mb-4" style="font-size: 3.5rem;"></i>
+                <h4 class="text-white fw-bold mb-2">AI Project Lab is Empty</h4>
+                <p class="text-muted small mb-0" style="max-width: 450px;">Select a hackathon theme on the left panel and click 'Generate MVP Idea' to construct database schemas, monetization plans, and elevator pitches.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

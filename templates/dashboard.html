@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Dev Tinder{% endblock %}
+
+{% block page_title %}
+    {% if hack_discover_only %}
+        Hackathon Discovery
+    {% elif admin_panel_only %}
+        System Administration
+    {% else %}
+        Hacker Workspace
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if hack_discover_only %}
+<!-- HACKATHON DISCOVERY VIEW -->
+<div class="row" data-aos="fade-up">
+    <div class="col-12 mb-4">
+        <div class="glass-panel p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h4 class="text-white fw-bold mb-1">Explore Open Hackathons</h4>
+                <p class="text-muted small mb-0">Discover teams, filter by stack categories, and enroll to compete.</p>
+            </div>
+            
+            <!-- Category Filter Buttons -->
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('hackathons') }}" class="btn btn-sm {% if not active_filter %}btn-glow-primary{% else %}btn-outline-light{% endif %} px-3">All</a>
+                {% for cat in ['AI', 'Web Development', 'Cybersecurity', 'Open Source', 'Blockchain'] %}
+                <a href="{{ url_for('hackathons', category=cat) }}" class="btn btn-sm {% if active_filter == cat %}btn-glow-primary{% else %}btn-outline-light{% endif %} px-3">{{ cat }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Hackathon Cards -->
+    {% if hacks %}
+        {% for hack in hacks %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between glass-panel-hover">
+                <div>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="bg-primary bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <i class="fa-solid {{ hack.logo or 'fa-laptop-code' }} text-accent fs-4"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-white fw-bold mb-0 text-truncate" style="max-width: 200px;">{{ hack.name }}</h5>
+                            <span class="badge bg-secondary small mt-1">{{ hack.category }}</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="list-unstyled small text-muted mb-4">
+                        <li class="mb-2"><i class="fa-regular fa-calendar-days text-primary me-2"></i>{{ hack.start_date }}</li>
+                        <li class="mb-2"><i class="fa-solid fa-trophy text-warning me-2"></i>Prize: <strong class="text-white">{{ hack.prize_pool }}</strong></li>
+                        <li class="mb-2"><i class="fa-solid fa-location-dot text-danger me-2"></i>{{ hack.location }}</li>
+                    </ul>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="{{ hack.link or 'https://devpost.com' }}" target="_blank" class="btn btn-glow-primary btn-sm py-2">View Devpost</a>
+                    <a href="{{ url_for('matches') }}" class="btn btn-outline-light btn-sm py-2">Find Partners</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12 text-center py-5">
+            <i class="fa-solid fa-calendar-xmark text-muted fs-1 mb-3"></i>
+            <h5 class="text-white-50">No hackathons listed in this category.</h5>
+        </div>
+    {% endif %}
+</div>
+
+{% elif admin_panel_only %}
+<!-- ADMIN PANEL VIEW -->
+<div class="row g-4 mb-4" data-aos="fade-up">
+    <!-- Stat Widgets -->
+    <div class="col-md-3">
+        <div class="glass-panel metric-card">
+            <i class="fa-solid fa-users"></i>
+            <h3 class="text-white fw-extrabold mb-1 mt-2">{{ total_users }}</h3>
+            <p class="text-muted small mb-0">Total Accounts</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel metric-card">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <h3 class="text-white fw-extrabold mb-1 mt-2">{{ total_matches }}</h3>
+            <p class="text-muted small mb-0">Total Swipe Matches</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel metric-card">
+            <i class="fa-solid fa-users-rectangle"></i>
+            <h3 class="text-white fw-extrabold mb-1 mt-2">{{ total_teams }}</h3>
+            <p class="text-muted small mb-0">Teams Created</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-panel metric-card">
+            <i class="fa-solid fa-comments"></i>
+            <h3 class="text-white fw-extrabold mb-1 mt-2">{{ total_messages }}</h3>
+            <p class="text-muted small mb-0">Messages Logged</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4" data-aos="fade-up">
+    <!-- Users Admin Table -->
+    <div class="col-lg-7">
+        <div class="glass-panel p-4 h-100">
+            <h5 class="text-white fw-bold mb-4"><i class="fa-solid fa-user-shield me-2 text-primary"></i>Registered Users</h5>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle leaderboard-table mb-0">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th>User</th>
+                            <th>College</th>
+                            <th>Badge</th>
+                            <th>Date Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usr in all_users %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="{{ usr.profile_image or 'https://api.dicebear.com/7.x/bottts/svg?seed=' + usr.username }}" class="rounded-circle" style="width: 32px; height: 32px;">
+                                    <div>
+                                        <div class="fw-bold text-white small mb-0">{{ usr.full_name or usr.username }}</div>
+                                        <div class="text-muted small" style="font-size: 0.75rem;">@{{ usr.username }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="small">{{ usr.college or 'MIT' }}</td>
+                            <td><span class="badge bg-secondary small">{{ usr.get_badge() }}</span></td>
+                            <td class="small">{{ usr.created_at.strftime('%d %b, %Y') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teams Admin Table -->
+    <div class="col-lg-5">
+        <div class="glass-panel p-4 h-100">
+            <h5 class="text-white fw-bold mb-4"><i class="fa-solid fa-users-viewfinder me-2 text-secondary"></i>Active Hackathon Teams</h5>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle leaderboard-table mb-0">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th>Team Name</th>
+                            <th>Members</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in all_teams %}
+                        <tr>
+                            <td>
+                                <div class="fw-bold text-white small mb-1">{{ t.name }}</div>
+                                <div class="text-muted small text-truncate" style="font-size: 0.75rem; max-width: 150px;">{{ t.description }}</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary rounded-pill">{{ t.members|length }} active</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- CENTRAL WORKSPACE / MAIN DASHBOARD -->
+<div class="row g-4">
+
+    {% set has_github = current_user.github_url and current_user.github_url.strip() %}
+    {% set has_skills = current_user.get_skills_list()|length > 0 %}
+    {% set has_bio = current_user.bio and current_user.bio.strip() %}
+    {% set has_team = team %}
+    {% set onboard_steps = [
+        {'done': has_bio and has_github, 'label': 'Complete your profile (bio + GitHub link)', 'url': url_for('profile'), 'cta': 'Edit Profile', 'icon': 'fa-user-pen'},
+        {'done': has_skills, 'label': 'Add your skills so we can match you accurately', 'url': url_for('profile'), 'cta': 'Add Skills', 'icon': 'fa-tags'},
+        {'done': active_matches_count > 0, 'label': 'Find your first match', 'url': url_for('matches'), 'cta': 'Find Matches', 'icon': 'fa-heart-pulse'},
+        {'done': has_team, 'label': 'Create or join a team', 'url': url_for('team'), 'cta': 'Go to Team', 'icon': 'fa-users'},
+    ] %}
+    {% set completed_steps = onboard_steps|selectattr('done')|list|length %}
+
+    {% if completed_steps < onboard_steps|length %}
+    <div class="col-12" data-aos="fade-up">
+        <div class="glass-panel p-4" style="border-left: 5px solid var(--primary);">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h5 class="fw-bold mb-0" style="color: var(--text-primary);">
+                    <i class="fa-solid fa-rocket text-primary me-2"></i>Get Started — {{ completed_steps }}/{{ onboard_steps|length }} done
+                </h5>
+                <div class="progress flex-grow-1 mx-3" style="max-width: 220px; height: 8px; background: var(--card-border);">
+                    <div class="progress-bar" role="progressbar" style="width: {{ (completed_steps / onboard_steps|length * 100)|round|int }}%; background: var(--primary);"></div>
+                </div>
+            </div>
+            <div class="row g-3">
+                {% for step in onboard_steps %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="p-3 rounded h-100 d-flex flex-column justify-content-between {% if step.done %}border border-success{% else %}border{% endif %}" style="background: var(--card-bg); border-color: {% if step.done %}var(--success){% else %}var(--card-border){% endif %} !important;">
+                        <div class="d-flex align-items-start gap-2 mb-2">
+                            {% if step.done %}
+                                <i class="fa-solid fa-circle-check text-success mt-1"></i>
+                            {% else %}
+                                <i class="fa-solid {{ step.icon }} text-muted mt-1"></i>
+                            {% endif %}
+                            <p class="small mb-0 {% if step.done %}text-decoration-line-through text-muted{% else %}text-secondary{% endif %}">{{ step.label }}</p>
+                        </div>
+                        {% if not step.done %}
+                        <a href="{{ step.url }}" class="btn btn-outline-light btn-sm w-100 mt-2">{{ step.cta }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Welcome Header Panel -->
+    <div class="col-12" data-aos="fade-up">
+        <div class="glass-panel p-4 d-flex justify-content-between align-items-center flex-wrap gap-3 position-relative overflow-hidden" style="border-left: 5px solid var(--secondary);">
+            <div>
+                <h4 class="text-white fw-bold mb-1">Welcome back, {{ current_user.full_name or current_user.username }}!</h4>
+                <p class="text-muted small mb-0">Your profile is registered as <span class="text-white fw-bold">@{{ current_user.username }}</span>. Hook up your GitHub and start matching.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('matches') }}" class="btn btn-glow-primary px-4 py-2"><i class="fa-solid fa-heart-pulse me-2"></i>Find Matches</a>
+                <a href="{{ url_for('hackathons') }}" class="btn btn-outline-light px-4 py-2"><i class="fa-solid fa-globe me-2"></i>Discover Hacks</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Metrics Row -->
+    <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-panel metric-card h-100">
+            <i class="fa-solid fa-heart-circle-check text-secondary"></i>
+            <h3 class="text-white fw-extrabold mb-1 mt-2">{{ active_matches_count }}</h3>
+            <p class="text-muted small mb-2">Active Chat Connections</p>
+            <a href="{{ url_for('chat') }}" class="btn btn-outline-light btn-sm w-100 mt-2">Open Chats</a>
+        </div>
+    </div>
+    
+    <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="glass-panel metric-card h-100">
+            <i class="fa-solid fa-users-rectangle text-primary"></i>
+            {% if team %}
+                <h4 class="text-white fw-bold mb-1 mt-2 text-truncate">{{ team.name }}</h4>
+                <p class="text-muted small mb-2">{{ team.members|length }} Members Assembled</p>
+                <a href="{{ url_for('team') }}" class="btn btn-outline-light btn-sm w-100 mt-2">Team Dashboard</a>
+            {% else %}
+                <h4 class="text-white fw-bold mb-1 mt-2">No Active Team</h4>
+                <p class="text-muted small mb-2">Build or join a teammate deck</p>
+                <a href="{{ url_for('team') }}" class="btn btn-glow-accent btn-sm w-100 mt-2">Create a Team</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="glass-panel metric-card h-100">
+            <i class="fa-solid fa-lightbulb text-warning"></i>
+            <h4 class="text-white fw-bold mb-1 mt-2">AI Project Lab</h4>
+            <p class="text-muted small mb-2">Generate MVP specs via Gemini</p>
+            <a href="{{ url_for('project_generator') }}" class="btn btn-outline-light btn-sm w-100 mt-2">Generate Ideas</a>
+        </div>
+    </div>
+
+    <!-- Compatibility Suggestions Carousel -->
+    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="400">
+        <div class="glass-panel p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-white fw-bold mb-0"><i class="fa-solid fa-fire text-secondary me-2"></i>Top Recommendations</h5>
+                <a href="{{ url_for('matches') }}" class="text-accent text-decoration-none small">Swipe Deck <i class="fa-solid fa-chevron-right ms-1"></i></a>
+            </div>
+            
+            {% if suggestions %}
+            <div class="row g-3">
+                {% for sug in suggestions %}
+                <div class="col-md-6">
+                    <div class="p-3 rounded bg-dark border border-secondary" >
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="{{ sug.user.profile_image or 'https://api.dicebear.com/7.x/bottts/svg?seed=' + sug.user.username }}" class="rounded-circle" style="width: 38px; height: 38px;">
+                                <div>
+                                    <div class="fw-bold text-white small text-truncate" style="max-width: 120px;">{{ sug.user.full_name or sug.user.username }}</div>
+                                    <div class="text-muted small" style="font-size: 0.75rem;">{{ sug.user.college or 'BITS Pilani' }}</div>
+                                </div>
+                            </div>
+                            <span class="badge bg-secondary text-accent fw-bold" style="font-size: 0.75rem;">{{ sug.score }}% Match</span>
+                        </div>
+                        <p class="text-muted small mb-2 text-truncate-2">{{ sug.user.bio or 'No bio provided yet.' }}</p>
+                        <div class="d-flex flex-wrap gap-1 mb-2">
+                            {% for s in sug.user.get_skills_list()[:3] %}
+                            <span class="badge bg-dark small text-white-50">{{ s }}</span>
+                            {% endfor %}
+                        </div>
+                        <a href="{{ url_for('matches') }}" class="btn btn-glow-primary btn-sm w-100 py-1" style="font-size: 0.8rem;">Review Profile</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fa-solid fa-face-smile-wink text-muted fs-1 mb-3"></i>
+                <h6 class="text-white-50">You're fully caught up! No new recommendations today.</h6>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Seeded Upcoming Hackathons Sidebar -->
+    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="500">
+        <div class="glass-panel p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="text-white fw-bold mb-0"><i class="fa-solid fa-globe text-primary me-2"></i>Upcoming Hackathons</h5>
+                <a href="{{ url_for('hackathons') }}" class="text-accent text-decoration-none small">See All</a>
+            </div>
+            
+            <div class="d-flex flex-column gap-3">
+                {% for hack in hackathons %}
+                <div class="p-3 rounded bg-dark border border-secondary d-flex gap-3 align-items-center" >
+                    <div class="bg-primary bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; flex-shrink: 0;">
+                        <i class="fa-solid {{ hack.logo or 'fa-laptop-code' }} text-accent fs-5"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <a href="{{ hack.link or 'https://devpost.com' }}" target="_blank" class="fw-bold text-white small mb-1 text-decoration-none text-truncate d-block">{{ hack.name }}</a>
+                        <div class="small text-muted text-truncate" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-trophy text-warning me-1"></i>{{ hack.prize_pool }} • {{ hack.start_date }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

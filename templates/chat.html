@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Messages - Dev Tinder{% endblock %}
+
+{% block page_title %}Hacker Chatroom{% endblock %}
+
+{% block content %}
+<div class="glass-panel chat-window" data-aos="fade-up">
+    <!-- Chat Conversations Sidebar -->
+    <div class="chat-sidebar d-flex flex-column">
+        <div class="p-3 border-bottom border-secondary text-white fw-bold" >
+            <i class="fa-regular fa-comments me-2 text-primary"></i>Conversations
+        </div>
+        
+        <div class="flex-grow-1 overflow-y-auto">
+            <!-- Team Channel (If in team) -->
+            {% if team %}
+            <div class="p-2 border-bottom border-secondary" >
+                <div class="small text-muted px-2 mb-1">TEAM CHANNEL</div>
+                <a href="{{ url_for('chat_team', team_id=team.id) }}" class="d-flex align-items-center gap-3 p-2 rounded text-decoration-none {% if is_team_chat %}bg-primary bg-opacity-25{% endif %}">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
+                        <i class="fa-solid fa-users-rectangle"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-white small">#{{ team.name }}</div>
+                        <div class="text-muted small" style="font-size: 0.75rem;">Global team room</div>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Direct Matches chat list -->
+            <div class="p-2">
+                <div class="small text-muted px-2 mb-1">DIRECT MESSAGES</div>
+                {% if chat_users %}
+                    {% for usr in chat_users %}
+                    <a href="{{ url_for('chat_user', chat_user_id=usr.id) }}" class="d-flex align-items-center gap-3 p-2 rounded text-decoration-none mb-1 {% if active_chat_user and active_chat_user.id == usr.id %}bg-primary bg-opacity-25{% endif %}">
+                        <div class="position-relative">
+                            <img src="{{ usr.profile_image or 'https://api.dicebear.com/7.x/bottts/svg?seed=' + usr.username }}" class="rounded-circle" style="width: 40px; height: 40px;">
+                            <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-white rounded-circle" style="border-color: #0f172a !important;"></span>
+                        </div>
+                        <div class="overflow-hidden">
+                            <div class="fw-bold text-white small text-truncate">{{ usr.full_name or usr.username }}</div>
+                            <div class="text-accent small text-truncate" style="font-size: 0.75rem;">{{ usr.get_badge() }}</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4 text-muted small">Swipe to connect with hackers to unlock DM channels!</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Conversation window -->
+    <div class="chat-messages-container">
+        {% if active_chat_user or is_team_chat %}
+            <!-- Chat Window Header -->
+            <div class="p-3 border-bottom border-secondary d-flex align-items-center justify-content-between" >
+                <div class="d-flex align-items-center gap-3">
+                    {% if is_team_chat %}
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 45px; height: 45px;">
+                            <i class="fa-solid fa-users-rectangle"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-white fw-bold mb-0">#{{ team.name }}</h5>
+                            <span class="text-muted small">Collaborative workspace chat</span>
+                        </div>
+                    {% else %}
+                        <img src="{{ active_chat_user.profile_image or 'https://api.dicebear.com/7.x/bottts/svg?seed=' + active_chat_user.username }}" class="rounded-circle" style="width: 45px; height: 45px;">
+                        <div>
+                            <h5 class="text-white fw-bold mb-0">{{ active_chat_user.full_name or active_chat_user.username }}</h5>
+                            <span class="text-accent small"><i class="fa-solid fa-circle text-success me-1" style="font-size: 0.6rem;"></i>Online</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Messages Log Panel -->
+            <div class="chat-messages" id="chat-messages" 
+                 data-current-user-id="{{ current_user.id }}"
+                 data-receiver-id="{% if active_chat_user %}{{ active_chat_user.id }}{% endif %}"
+                 data-team-id="{% if is_team_chat %}{{ team.id }}{% endif %}">
+                <!-- Messages populated and updated dynamically in main.js -->
+            </div>
+
+            <!-- Chat Send Input Area -->
+            <div class="chat-input-area position-relative">
+                <!-- Emojis panel widget -->
+                <div class="emoji-panel glass-panel" id="emoji-panel">
+                    <button type="button" class="emoji-btn">😀</button>
+                    <button type="button" class="emoji-btn">😂</button>
+                    <button type="button" class="emoji-btn">🚀</button>
+                    <button type="button" class="emoji-btn">💻</button>
+                    <button type="button" class="emoji-btn">🔥</button>
+                    <button type="button" class="emoji-btn">🎉</button>
+                </div>
+                
+                <form id="chat-send-form" class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-light rounded-circle" id="emoji-toggle" style="width: 45px; height: 45px; flex-shrink: 0;">
+                        <i class="fa-regular fa-face-smile"></i>
+                    </button>
+                    <input type="text" id="chat-input" class="form-control form-control-glass flex-grow-1" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit" class="btn btn-glow-primary rounded-circle" style="width: 45px; height: 45px; flex-shrink: 0;">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+            
+        {% else %}
+            <!-- EMPTY CONVERSATION STATE -->
+            <div class="d-flex flex-column align-items-center justify-content-center text-center h-100 p-5">
+                <i class="fa-regular fa-comment-dots text-primary mb-4" style="font-size: 4rem;"></i>
+                <h4 class="text-white fw-bold mb-2">Select a Conversation</h4>
+                <p class="text-muted small" style="max-width: 400px;">Click on a direct match channel or team chatroom on the left sidebar to coordinate code assemblies.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

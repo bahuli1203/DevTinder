@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - Dev Tinder{% endblock %}
+
+{% block page_title %}Rankings & Badges{% endblock %}
+
+{% block content %}
+<div class="row g-4" data-aos="fade-up">
+    <!-- Top Hackers Leaderboard -->
+    <div class="col-lg-7">
+        <div class="glass-panel p-4 h-100">
+            <div class="border-bottom border-secondary pb-3 mb-4 d-flex justify-content-between align-items-center" >
+                <h5 class="text-white fw-bold mb-0">
+                    <i class="fa-solid fa-medal text-warning me-2"></i>Most Active Hackers
+                </h5>
+                <span class="text-muted small">Based on Activity Points</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle leaderboard-table mb-0">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th style="width: 80px;">Rank</th>
+                            <th>Hacker</th>
+                            <th>Specialty Badge</th>
+                            <th class="text-end">Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if ranked_users %}
+                            {% for row in ranked_users %}
+                            <tr>
+                                <td class="leaderboard-rank">
+                                    {% if row.rank == 1 %}
+                                        <i class="fa-solid fa-trophy rank-gold"></i>
+                                    {% elif row.rank == 2 %}
+                                        <i class="fa-solid fa-trophy rank-silver"></i>
+                                    {% elif row.rank == 3 %}
+                                        <i class="fa-solid fa-trophy rank-bronze"></i>
+                                    {% else %}
+                                        #{{ row.rank }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img src="{{ row.user.profile_image or 'https://api.dicebear.com/7.x/bottts/svg?seed=' + row.user.username }}" class="rounded-circle" style="width: 40px; height: 40px;">
+                                        <div>
+                                            <div class="fw-bold text-white small mb-0">{{ row.user.full_name or row.user.username }}</div>
+                                            <div class="text-muted small" style="font-size: 0.75rem;">{{ row.user.college or 'MIT' }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if row.badge == 'AI Wizard' %}
+                                        <span class="badge bg-primary bg-opacity-25 border border-primary text-primary small"><i class="fa-solid fa-brain me-1"></i>AI Wizard</span>
+                                    {% elif row.badge == 'Design Pro' %}
+                                        <span class="badge bg-info bg-opacity-25 border border-info text-info small"><i class="fa-solid fa-palette me-1"></i>Design Pro</span>
+                                    {% elif row.badge == 'Team Builder' %}
+                                        <span class="badge bg-success bg-opacity-25 border border-success text-success small"><i class="fa-solid fa-people-group me-1"></i>Team Builder</span>
+                                    {% elif row.badge == 'Hackathon Veteran' %}
+                                        <span class="badge bg-warning bg-opacity-25 border border-warning text-warning small"><i class="fa-solid fa-shield-halved me-1"></i>Hackathon Veteran</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary small">{{ row.badge }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end fw-bold text-white">{{ row.score }} pts</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted small">No activity data logged yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Teams Strength Leaderboard -->
+    <div class="col-lg-5">
+        <div class="glass-panel p-4 h-100">
+            <div class="border-bottom border-secondary pb-3 mb-4" >
+                <h5 class="text-white fw-bold mb-0">
+                    <i class="fa-solid fa-shield-cat text-accent me-2"></i>Strongest Team Decks
+                </h5>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle leaderboard-table mb-0">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th>Rank</th>
+                            <th>Team Deck</th>
+                            <th class="text-end">Balance Index</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if ranked_teams %}
+                            {% for item in ranked_teams %}
+                            <tr>
+                                <td class="leaderboard-rank">#{{ loop.index }}</td>
+                                <td>
+                                    <div class="fw-bold text-white small mb-0">{{ item.team.name }}</div>
+                                    <div class="text-muted small text-truncate" style="font-size: 0.75rem; max-width: 200px;">{{ item.team.description }}</div>
+                                </td>
+                                <td class="text-end">
+                                    <span class="badge bg-primary text-white fw-bold fs-6">{{ item.score }}/100</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted small">No teams created yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
