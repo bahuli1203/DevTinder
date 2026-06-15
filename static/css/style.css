@@ -571,7 +571,7 @@ p, span, label, div {
 /* 3D Floating Mascot */
 .mascot-wrapper {
     position: absolute;
-    bottom: -30px;
+    bottom: -90px;
     right: -20px;
     width: 180px;
     z-index: 5;
@@ -596,14 +596,7 @@ p, span, label, div {
     75% { transform: rotateY(-8deg) rotateX(2deg); }
 }
 .mascot-layer { transform-origin: center; }
-.mascot-duck {
-    animation: duck-bob 2.4s ease-in-out infinite;
-    transform-origin: 140px 200px;
-}
-@keyframes duck-bob {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-5px) rotate(-4deg); }
-}
+
 .mascot-dev1 { animation: dev-nod 3.2s ease-in-out infinite; transform-origin: 95px 90px; }
 .mascot-dev2 { animation: dev-nod 3.2s ease-in-out infinite reverse; transform-origin: 185px 90px; }
 @keyframes dev-nod {

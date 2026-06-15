@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Sign In - Dev Tinder{% endblock %}
+{% block title %}{% if forgot %}Reset Password{% else %}Sign In{% endif %} - Dev Tinder{% endblock %}
 
 {% block guest_content %}
 <div class="container py-5 mt-5">
@@ -13,7 +13,7 @@
                 <p class="text-muted small text-center mb-4">Enter your registered email address below and we will send you a password recovery link.</p>
                 <form action="{{ url_for('forgot_password') }}" method="POST">
                     <div class="form-floating mb-4">
-                        <input type="email" name="email" class="form-control" id="floatingEmail" placeholder="e.g. dev@example.com" required>
+                        <input type="email" name="email" class="form-control" id="floatingEmail" placeholder="e.g. dev@example.com" autocomplete="email" required>
                         <label for="floatingEmail">Email Address</label>
                     </div>
                     <button type="submit" class="btn btn-glow-primary w-100 py-3 mb-3">Send Recovery Link</button>
@@ -30,11 +30,11 @@
                 
                 <form action="{{ url_for('login') }}" method="POST">
                     <div class="form-floating mb-3">
-                        <input type="text" name="email_or_username" class="form-control" id="floatingUser" placeholder="e.g. alex_dev" required>
+                        <input type="text" name="email_or_username" class="form-control" id="floatingUser" placeholder="e.g. alex_dev" autocomplete="username" required>
                         <label for="floatingUser">Username or Email</label>
                     </div>
                     <div class="form-floating mb-4 position-relative">
-                        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="••••••••" required>
+                        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="••••••••" autocomplete="current-password" required>
                         <label for="floatingPassword">Password</label>
                         <a href="{{ url_for('forgot_password') }}" class="text-accent small text-decoration-none position-absolute" style="right: 15px; top: 18px; z-index: 5;">Forgot?</a>
                     </div>

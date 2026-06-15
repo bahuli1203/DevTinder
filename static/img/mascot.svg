@@ -1,4 +1,4 @@
-<svg viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg" class="mascot-svg" role="img" aria-label="Two developers matched as a hackathon pair, debugging with their rubber duck">
+<svg viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg" class="mascot-svg" role="img" aria-label="Two developers matched as a hackathon pair">
   <defs>
     <linearGradient id="screenGlow" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.55"/>
@@ -8,7 +8,7 @@
       .mascot-laptop { animation: float-laptop 5s ease-in-out infinite; transform-origin: 140px 150px; }
       .mascot-dev1 { animation: dev-nod 3.2s ease-in-out infinite; transform-origin: 95px 90px; }
       .mascot-dev2 { animation: dev-nod 3.2s ease-in-out infinite reverse; transform-origin: 185px 90px; }
-      .mascot-duck { animation: duck-bob 2.4s ease-in-out infinite; transform-origin: 140px 200px; }
+
       @keyframes float-laptop {
         0%, 100% { transform: translateY(0px); }
         50% { transform: translateY(-6px); }
@@ -17,10 +17,7 @@
         0%, 100% { transform: rotate(0deg); }
         50% { transform: rotate(3deg); }
       }
-      @keyframes duck-bob {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-5px) rotate(-4deg); }
-      }
+
     </style>
   </defs>
 
@@ -50,11 +47,5 @@
     <path d="M178 67 Q185 72 192 67" stroke="#0f172a" stroke-width="2" fill="none" stroke-linecap="round"/>
   </g>
 
-  <!-- Rubber duck mascot -->
-  <g class="mascot-layer mascot-duck">
-    <ellipse cx="140" cy="200" rx="26" ry="20" fill="#facc15"/>
-    <circle cx="158" cy="188" r="13" fill="#facc15"/>
-    <circle cx="163" cy="184" r="2.2" fill="#0f172a"/>
-    <path d="M170 188 L180 186 L170 192 Z" fill="#fb923c"/>
-  </g>
+
 </svg>
